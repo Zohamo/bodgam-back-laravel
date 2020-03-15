@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class Location extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,19 +12,21 @@ class Profile extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
         'name',
-        'email',
-        'avatar',
-        'gender',
-        'description',
-        'birthdate',
-        'bggName',
-        'phoneNumber',
-        'website',
+        'isDefault',
+        'isPublic',
+        'address1',
+        'address2',
+        'zipCode',
         'district',
         'city',
         'country',
+        'latitude',
+        'longitude',
+        'accuracy',
+        'description',
+        'isAllowedSmoking',
+        'isAccessible',
         'user_id',
     ];
 }
