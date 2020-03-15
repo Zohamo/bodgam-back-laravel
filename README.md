@@ -7,6 +7,27 @@ Based on Laravel PHP Framework.
 -   Launch : `php artisan serve`
 -   Restart Apache server : `sudo /etc/init.d/apache2 restart`
 
+### Basic Commands
+
+#### Model
+
+[Create a model](https://laravel.com/docs/5.8/eloquent#defining-models) : `php artisan make:model User -mc`
+
+[Options](https://quickadminpanel.com/blog/list-of-21-artisan-make-commands-with-parameters/) :
+
+-   `--migration` or `-m` : Create a new migration file for the model.
+-   `--controller` or `-c` : Create a new controller file for the model.
+
+#### Controller
+
+[Create a controller](https://laravel.com/docs/5.7/controllers) : `php artisan make:controller UserController --api --model=User`
+
+[Options](https://quickadminpanel.com/blog/list-of-21-artisan-make-commands-with-parameters/) :
+
+-   `--api` : Generates 5 methods: index(), store(), show(), update(), destroy(). Because create/edit forms are not needed for API.
+-   `--model=Photo` : If you are using route model binding and would like the resource controller’s methods to type-hint a model instance.
+-   `--invokable` : Generates controller with one \_\_invoke() method. [Invokable Controllers with One Specific Action](https://laraveldaily.com/invokable-controllers-with-one-specific-action/)
+
 ### Database Commands
 
 #### Migrations
