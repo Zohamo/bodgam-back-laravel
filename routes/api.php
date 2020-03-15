@@ -18,8 +18,14 @@ Route::middleware('auth:api')->get('/api/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('register', 'UserController@store');
 Route::post('login', 'UserController@login');
-Route::post('register', 'UserController@register');
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::post('details', 'UserController@details');
+    Route::get('user/{id}', 'UserController@show');
+    Route::put('user/{id}', 'UserController@update');
+    Route::delete('user/{id}', 'UserController@delete');
 });
+
+Route::apiResource('events', 'LocationController');
+Route::apiResource('locations', 'LocationController');
+Route::apiResource('profiles', 'LocationController');

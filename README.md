@@ -4,8 +4,13 @@ Based on Laravel PHP Framework.
 
 ## Commands
 
--   Launch : `php artisan serve`
+-   Run : `php artisan serve`
 -   Restart Apache server : `sudo /etc/init.d/apache2 restart`
+
+Initialize :
+
+-   Drop All Tables & Migrate : `php artisan migrate:fresh --seed`
+-   Passport : `php artisan passport:client --personal` or `php artisan passport:install`
 
 ### Basic Commands
 
@@ -27,6 +32,10 @@ Based on Laravel PHP Framework.
 -   `--api` : Generates 5 methods: index(), store(), show(), update(), destroy(). Because create/edit forms are not needed for API.
 -   `--model=Photo` : If you are using route model binding and would like the resource controller’s methods to type-hint a model instance.
 -   `--invokable` : Generates controller with one \_\_invoke() method. [Invokable Controllers with One Specific Action](https://laraveldaily.com/invokable-controllers-with-one-specific-action/)
+
+#### Request
+
+[Create a request](https://medium.com/@kamerk22/the-smart-way-to-handle-request-validation-in-laravel-5e8886279271) : `php artisan make:request UserStoreRequest`
 
 ### Database Commands
 
@@ -55,6 +64,10 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 -   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
 -   [Robust background job processing](https://laravel.com/docs/queues).
 -   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+
+### Laravel Best Practices
+
+Top 10 Laravel Best Practices You Should Follow [from Sree](https://www.innofied.com/top-10-laravel-best-practices/)
 
 ## Issues
 

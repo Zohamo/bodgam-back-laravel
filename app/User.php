@@ -37,4 +37,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function response($user)
+    {
+        $response['id'] =  $user->id;
+        $response['name'] =  $user->name;
+        $response['email'] =  $user->email;
+        $response['token'] =  $user->createToken('BodGam')-> accessToken;
+        return $response;
+    }
 }
