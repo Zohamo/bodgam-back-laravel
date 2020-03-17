@@ -19,7 +19,8 @@ class CreateProfileSettingsTable extends Migration
 
             // FK
 
-            $table->foreignId('profile_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('profileId');
+            $table->foreign('profileId')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

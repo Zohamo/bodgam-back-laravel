@@ -15,24 +15,24 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
 
             $table->string('title', 128);
             $table->boolean('isPrivate')->default(0);
 
             // Datetime
 
-            $table->timestamp('start_datetime')->nullable();
-            $table->timestamp('end_datetime')->nullable();
+            $table->timestamp('startDatetime')->nullable();
+            $table->timestamp('endDatetime')->nullable();
 
             // Location
 
-            $table->foreignId('location_id')->constrained();
+            $table->unsignedBigInteger('locationId');
+            $table->foreign('locationId')->references('id')->on('locations');
 
             // Host
 
-            $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('userId');
+            $table->foreign('userId')->references('id')->on('users');
 
             // Players
 
@@ -42,10 +42,13 @@ class CreateEventsTable extends Migration
             // Details
 
             $table->longText('description')->nullable();
-            $table->unsignedTinyInteger('level_id')->nullable();
-            $table->foreign('level_id')->references('id')->on('event_levels_types');
-            $table->unsignedTinyInteger('atmosphere_id')->nullable();
-            $table->foreign('atmosphere_id')->references('id')->on('event_atmospheres_types');
+            $table->unsignedTinyInteger('level')->nullable();
+            $table->unsignedTinyInteger('atmosphere')->nullable();
+
+            // Timestamps
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

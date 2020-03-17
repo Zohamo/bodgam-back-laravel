@@ -2,10 +2,19 @@
 
 Based on Laravel PHP Framework.
 
+## Operation
+
+API Router > Controller > Repository > Model > MySQL DB
+
+The **API Router** will call the related **Controller** method, that will get/set data from/to the **MySQL DB**'s **Model** passing through the **Repository** interface.
+
+Repository design pattern [from Connor Leech](https://medium.com/employbl/use-the-repository-design-pattern-in-a-laravel-application-13f0b46a3dce)
+
 ## Commands
 
--   Run : `php artisan serve`
+-   Run Laravel server : `php artisan serve`
 -   Restart Apache server : `sudo /etc/init.d/apache2 restart`
+-   Run MySQL : `sudo /usr/bin/mysql -u root -p`
 
 Initialize :
 
@@ -35,7 +44,7 @@ Initialize :
 
 #### Request
 
-[Create a request](https://medium.com/@kamerk22/the-smart-way-to-handle-request-validation-in-laravel-5e8886279271) : `php artisan make:request UserStoreRequest`
+[Create a request](https://medium.com/@kamerk22/the-smart-way-to-handle-request-validation-in-laravel-5e8886279271) : `php artisan make:request UserRequest`
 
 ### Database Commands
 
@@ -51,6 +60,8 @@ Initialize :
 -   [Create a seeder](https://laravel.com/docs/7.x/seeding#writing-seeders) : `php artisan make:seeder UsersTableSeeder`
 -   [Running Seeders](https://laravel.com/docs/7.x/seeding#running-seeders) : `php artisan db:seed`
 
+[6 Tips About Data Seeding in Laravel](https://laraveldaily.com/10-tips-about-data-seeding-in-laravel/)
+
 ## About Laravel
 
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
@@ -64,6 +75,12 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 -   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
 -   [Robust background job processing](https://laravel.com/docs/queues).
 -   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+
+### Laravel Doc
+
+-   [Available Validation Rules](https://laravel.com/docs/5.8/validation#available-validation-rules)
+-   [Laravel Daily](https://laraveldaily.com/)
+-   [Laravel API Tutorial: How to Build and Test a RESTful API](https://www.toptal.com/laravel/restful-laravel-api-tutorial)
 
 ### Laravel Best Practices
 

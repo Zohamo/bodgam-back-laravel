@@ -2,14 +2,18 @@
 
 namespace App;
 
-use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
+/**
+ * User Model
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +34,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be visible for arrays.
+     *
+     * @var array
+     */
+    protected $visible = [
+        'id', 'name', 'email',
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -38,12 +51,26 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function response($user)
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    /**
+     * Prepare Response to send
+     *
+     * @param  \App\User $user
+     * @return array
+     */
+    public function prepareResponse(User $user)
     {
-        $response['id'] =  $user->id;
-        $response['name'] =  $user->name;
-        $response['email'] =  $user->email;
-        $response['token'] =  $user->createToken('BodGam')-> accessToken;
-        return $response;
+        return [
+            'id' => $user->id,
+            'name' =>  $user->name,
+            'email' =>  $user->email,
+            'token' => $user->createToken('BodGam')->accessToken
+        ];
     }
 }

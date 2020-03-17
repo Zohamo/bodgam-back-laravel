@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 
 class CreateProfileRatingsTypesTable extends Migration
@@ -17,6 +18,10 @@ class CreateProfileRatingsTypesTable extends Migration
             $table->tinyIncrements('id');
             $table->string('type', 64);
         });
+
+        Artisan::call('db:seed', [
+            '--class' => ProfileRatingsTypesTableSeeder::class
+        ]);
     }
 
     /**

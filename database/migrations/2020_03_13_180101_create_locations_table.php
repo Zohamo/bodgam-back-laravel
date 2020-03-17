@@ -15,8 +15,6 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
 
             $table->string('name', 128);
             $table->boolean('isDefault')->default(0);
@@ -45,7 +43,13 @@ class CreateLocationsTable extends Migration
 
             // FK
 
-            $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('userId');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
+
+            // Timestamps
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

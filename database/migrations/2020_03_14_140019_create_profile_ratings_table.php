@@ -18,14 +18,14 @@ class CreateProfileRatingsTable extends Migration
 
             // FK
 
-            $table->foreignId('profile_id')->constrained();
+            $table->unsignedBigInteger('profileId');
+            $table->foreign('profileId')->references('id')->on('profiles')->onDelete('cascade');
 
-            $table->unsignedBigInteger('voter_id');
-            $table->foreign('voter_id')->references('id')->on('users');
+            $table->unsignedBigInteger('voterId');
+            $table->foreign('voterId')->references('id')->on('users');
 
             $table->unsignedTinyInteger('type')->nullable();
             $table->foreign('type')->references('id')->on('profile_ratings_types');
-
         });
     }
 

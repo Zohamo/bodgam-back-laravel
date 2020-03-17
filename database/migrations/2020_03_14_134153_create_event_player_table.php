@@ -19,8 +19,10 @@ class CreateEventPlayerTable extends Migration
 
             // FK
 
-            $table->foreignId('event_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('eventId');
+            $table->foreign('eventId')->references('id')->on('events');
+            $table->unsignedBigInteger('userId');
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
