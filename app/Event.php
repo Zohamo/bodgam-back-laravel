@@ -44,6 +44,36 @@ class Event extends Model
      */
     protected $dates = ['deleted_at'];
 
+    public function toArray()
+    {
+        $toArray = parent::toArray();
+        $toArray['startDatetime'] = $this->startDatetime;
+        $toArray['endDatetime'] = $this->endDatetime;
+        return $toArray;
+    }
+
+    /**
+     * Get the Event's startDatetime.
+     *
+     * @param  string  $value
+     * @return int
+     */
+    public function getStartDateTimeAttribute($value)
+    {
+        return strtotime($value) * 1000;
+    }
+
+    /**
+     * Get the Event's endDatetime.
+     *
+     * @param  string  $value
+     * @return int
+     */
+    public function getEndDatetimeAttribute($value)
+    {
+        return strtotime($value) * 1000;
+    }
+
     /**
      * Get the Location for the Event.
      */

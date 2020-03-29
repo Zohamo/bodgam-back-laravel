@@ -51,6 +51,17 @@ class Profile extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * Get the profile's birthdate.
+     *
+     * @param  string  $value
+     * @return int
+     */
+    public function getBirthdateAttribute($value)
+    {
+        return strtotime($value) * 1000;
+    }
+
+    /**
      * Get the Privacy for the Profile.
      */
     public function privacy()

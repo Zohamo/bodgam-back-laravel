@@ -36,6 +36,8 @@ Route::group(['middleware' => 'auth:api'], function () {
  */
 
 Route::apiResource('profiles', 'ProfileController')->middleware('data.transform');
+Route::get('profile/{id}/privacy', 'ProfilePrivacyController@show');
+Route::put('profile/{id}/privacy', 'ProfilePrivacyController@update');
 
 /**
  * Locations
