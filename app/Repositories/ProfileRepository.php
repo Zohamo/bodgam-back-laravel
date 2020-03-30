@@ -18,7 +18,11 @@ class ProfileRepository extends Repository
      */
     public function all()
     {
-        return $this->model::orderBy('created_at', 'desc')->with('ratings')->get();
+        return $this->model
+            ::select($this->model->getModel()->listItemAttributes)
+            ->orderBy('created_at', 'desc')
+            ->with('ratings')
+            ->get();
     }
 
     /**
@@ -40,6 +44,23 @@ class ProfileRepository extends Repository
     }
 
     /**
+     * Update record in the database
+     *
+     * @param  array $data
+     * @param  int $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function update(array $data, $id)
+    {
+        $record = $this->model::with(['privacy', 'ratings'])->find($id);
+        if ($record) {
+            $record->update($data);
+            return $record;
+        }
+        return null;
+    }
+
+    /**
      * Show the record with the given id
      *
      * @param  int  $id
@@ -48,5 +69,25 @@ class ProfileRepository extends Repository
     public function show(int $id)
     {
         return $this->model::with(['privacy', 'ratings'])->find($id);
+    }
+
+    /**
+     * Show the public record with the given id
+     *
+     * @param  int  $id
+     * @return App\Profile
+     */
+    public function showPublic(int $id)
+    {
+        $fullProfile = $this->model->with('ratings')->find($id);
+
+        // Unset the private attributes
+        foreach ($this->model->getModel()->privacyFields as $value) {
+            if (!$fullProfile['privacy'][$value]) {
+                unset($fullProfile[$value]);
+            }
+        }
+
+        return $fullProfile;
     }
 }

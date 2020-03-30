@@ -50,6 +50,31 @@ class Profile extends Model
      */
     protected $dates = ['deleted_at'];
 
+
+    /**
+     * The attributes that should be included in arrays.
+     *
+     * @var array
+     */
+    public $listItemAttributes = [
+        'id',
+        'name',
+        'avatar',
+        'gender',
+        'district',
+        'city',
+        'country',
+    ];
+
+    /**
+     * The attributes that can be private.
+     *
+     * @var array
+     */
+    public $privacyFields = [
+        'bggName', 'birthdate', 'email', 'phoneNumber', 'website',
+    ];
+
     /**
      * Get the profile's birthdate.
      *

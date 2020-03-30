@@ -15,7 +15,7 @@ class ProfilePrivacy extends Model
      * @var array
      */
     protected $fillable = [
-        'profileId', 'showBggName', 'showBirthdate', 'showEmail', 'showPhoneNumber', 'showWebsite',
+        'profileId', 'bggName', 'birthdate', 'email', 'phoneNumber', 'website',
     ];
 
     /**

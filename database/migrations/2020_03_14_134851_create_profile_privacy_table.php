@@ -14,11 +14,11 @@ class CreateProfilePrivacyTable extends Migration
     public function up()
     {
         Schema::create('profile_privacy', function (Blueprint $table) {
-            $table->boolean('showBggName')->default(0);
-            $table->boolean('showBirthdate')->default(0);
-            $table->boolean('showEmail')->default(0);
-            $table->boolean('showPhoneNumber')->default(0);
-            $table->boolean('showWebsite')->default(0);
+            $table->boolean('bggName')->default(0);
+            $table->boolean('birthdate')->default(0);
+            $table->boolean('email')->default(0);
+            $table->boolean('phoneNumber')->default(0);
+            $table->boolean('website')->default(0);
 
             // FK
 

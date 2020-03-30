@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Profile;
 use App\Http\Requests\ProfileRequest;
 use App\Repositories\ProfileRepository;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Profile Controller
@@ -59,7 +60,10 @@ class ProfileController extends Controller
      */
     public function show(int $profileId)
     {
-        $profile = $this->model->show($profileId);
+
+        $profile = Auth('api')->id() == $profileId
+            ? $this->model->show($profileId)
+            : $this->model->showPublic($profileId);
         return $profile ? response()->json($profile) : response('null');
     }
 
