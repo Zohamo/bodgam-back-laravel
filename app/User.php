@@ -73,4 +73,12 @@ class User extends Authenticatable
             'token' => $user->createToken('BodGam')->accessToken
         ];
     }
+
+    /**
+     * Get the Events the User has subscribed to.
+     */
+    public function eventSubscriptions()
+    {
+        return $this->hasMany('App\EventSubscription', 'eventId');
+    }
 }

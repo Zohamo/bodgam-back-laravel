@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Event;
 use App\Http\Requests\EventRequest;
 use App\Repositories\EventRepository;
-use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -22,9 +21,12 @@ class EventController extends Controller
     {
         $this->model = new EventRepository($event);
         $this->queryAllOptions = [
-            'past' => false,
-            'userId' => null,
-            'isAdmin' => false
+            'past'          => false,
+            'eventId'       => null,
+            'userId'        => null,
+            'profileId'     => null,
+            'isAdmin'       => false,
+            'subscriptions' => null
         ];
     }
 
@@ -51,15 +53,29 @@ class EventController extends Controller
 
 
     /**
-     * Display a listing of the resource of a specific User.
+     * Display a listing of the resource where the User is the Host.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function userAll(int $id)
     {
-        $this->queryAllOptions['userId'] = $id;
+        $this->queryAllOptions['profileId'] = $id;
         $this->queryAllOptions['isAdmin'] = Auth('api')->id() == $id;
+        return response()->json($this->model->allWithOptions($this->queryAllOptions));
+    }
+
+    /**
+     * Display a listing of the resource where the User is the Host or has subscribed to.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function userAllSubscriptions(int $id)
+    {
+        $this->queryAllOptions['profileId'] = $id; // get only where user is Host
+        $this->queryAllOptions['subscriptions'] = $id; // get also the events the user has subscribed to
+        $this->queryAllOptions['isAdmin'] = Auth('api')->id() == $id; // get also private Events where user is Host
         return response()->json($this->model->allWithOptions($this->queryAllOptions));
     }
 
@@ -71,8 +87,12 @@ class EventController extends Controller
      */
     public function show(int $id)
     {
-        $event = $this->model->show($id);
-        return $event ? response()->json($event) : response('null');
+        if (Auth('api')->id()) {
+            $this->queryAllOptions['userId'] = Auth('api')->id();
+        }
+        $this->queryAllOptions['eventId'] = $id;
+        $record = $this->model->showWithOptions($this->queryAllOptions);
+        return $record ? response()->json($record) : response('null');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Event;
 use Carbon\Carbon;
 
 /**
@@ -9,6 +10,24 @@ use Carbon\Carbon;
  */
 class EventRepository extends Repository
 {
+
+    /**
+     * Load the Event model with associations..
+     *
+     * @param  App\Event $record
+     * @return App\Event
+     */
+    private function fullEvent(Event $record)
+    {
+        return $record->load([
+            'location',
+            'host',
+            'players' => function ($query) {
+                $query->where('event_subscriptions.isAccepted', true);
+            }
+        ]);
+    }
+
     /**
      * Get all instances of model with options.
      *
@@ -31,9 +50,21 @@ class EventRepository extends Repository
             )
             // Profile's Events
             ->when(
-                $options['userId'],
-                function ($query, $userId) {
-                    return $query->where('userId', $userId);
+                $options['profileId'],
+                function ($query, $profileId) {
+                    return $query->where('userId', $profileId);
+                }
+            )
+            // Profile's Subscriptions
+            ->when(
+                $options['subscriptions'],
+                function ($query, $profileId) {
+                    return $query->orWhereHas('subscriptions', function ($query) use ($profileId) {
+                        $query->where([
+                            ['userId', $profileId],
+                            ['isAccepted', '!=', false]
+                        ]);
+                    });
                 }
             )
             // Visitor is Admin
@@ -44,7 +75,14 @@ class EventRepository extends Repository
                 }
             )
             ->orderBy('startDatetime', 'asc')
-            ->with(['location', 'host'])
+            ->with([
+                'location',
+                'host',
+                'subscription',
+                'players' => function ($query) {
+                    $query->where('event_subscriptions.isAccepted', true);
+                }
+            ])
             ->get();
     }
 
@@ -56,6 +94,69 @@ class EventRepository extends Repository
      */
     public function show(int $id)
     {
-        return $this->model::with(['host', 'location'])->find($id);
+        return $this->model
+            ::with([
+                'location',
+                'host',
+                'subscription',
+                'players' => function ($query) {
+                    $query->where('event_subscriptions.isAccepted', true);
+                }
+            ])
+            ->find($id);
+    }
+
+    /**
+     * Show the record with the given id
+     *
+     * @param  array  $options
+     * @return App\Event
+     */
+    public function showWithOptions(array $options)
+    {
+        $record  = $this->model
+            ::with([
+                'location',
+                'host',
+                'subscription',
+                'subscriptions',
+                'players' => function ($query) {
+                    $query->where('event_subscriptions.isAccepted', true);
+                }
+            ])
+            ->find($options['eventId']);
+
+        if ($record->userId !== $options['userId']) {
+            unset($record->subscriptions);
+        }
+        return $record;
+    }
+
+    /**
+     * Create a new record in the database
+     *
+     * @param  array $data
+     * @return App\Event
+     */
+    public function create(array $data)
+    {
+        return $this->fullEvent($this->model->create($data));
+    }
+
+    /**
+     * Update record in the database
+     *
+     * @param  array $data
+     * @param  int $id
+     * @return App\Event
+     */
+    public function update(array $data, $id)
+    {
+        $record = $this->model->find($id);
+        if ($record) {
+            $record->update($data);
+            return $this->fullEvent($record);
+        }
+        return null;
     }
 }

@@ -90,3 +90,55 @@ Top 10 Laravel Best Practices You Should Follow [from Sree](https://www.innofied
 
 -   `php artisan migrate` returns error `Illuminate\Database\QueryException could not find driver`
     fix : `sudo apt install php7.2-pdo php7.2-mysql`
+
+-   fix to implement [Composite keys](https://stackoverflow.com/questions/36332005/laravel-model-with-two-primary-keys-update) :
+
+```
+in \App\your_model.php
+
+protected $primaryKey = ['user_id', 'stock_id'];
+public $incrementing = false;
+
+in \vendor\laravel\framework\src\Illuminate\Database\Eloquent\Model.php
+
+/**
+ * Set the keys for a save update query.
+ *
+ * @param  \Illuminate\Database\Eloquent\Builder  $query
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+protected function setKeysForSaveQuery(Builder $query)
+{
+    $keys = $this->getKeyName();
+
+    if (!is_array($keys)) {
+        $query->where($this->getKeyName(), '=', $this->getKeyForSaveQuery());
+        return $query;
+    }
+
+    foreach ($keys as $keyName) {
+        $query->where($keyName, '=', $this->getKeyForSaveQuery($keyName));
+    }
+
+    return $query;
+}
+
+/**
+ * Get the primary key value for a save query.
+ *
+ * @param mixed $keyName
+ * @return mixed
+ */
+protected function getKeyForSaveQuery($keyName = null)
+{
+    if (is_null($keyName)) {
+        $keyName = $this->getKeyName();
+    }
+
+    if (isset($this->original[$keyName])) {
+        return $this->original[$keyName];
+    }
+
+    return $this->getAttribute($keyName);
+}
+```

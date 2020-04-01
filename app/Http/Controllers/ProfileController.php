@@ -60,7 +60,6 @@ class ProfileController extends Controller
      */
     public function show(int $profileId)
     {
-
         $profile = Auth('api')->id() == $profileId
             ? $this->model->show($profileId)
             : $this->model->showPublic($profileId);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEventPlayerTable extends Migration
+class CreateEventSubscriptionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateEventPlayerTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_player', function (Blueprint $table) {
-            $table->boolean('isAccepted')->default(0);
+        Schema::create('event_subscriptions', function (Blueprint $table) {
+            $table->boolean('isAccepted')->nullable();
             $table->boolean('hasConfirmed')->default(0);
 
             // FK
@@ -23,6 +23,10 @@ class CreateEventPlayerTable extends Migration
             $table->foreign('eventId')->references('id')->on('events');
             $table->unsignedBigInteger('userId');
             $table->foreign('userId')->references('id')->on('users');
+
+            // Timestamps
+
+            $table->timestamps();
         });
     }
 
@@ -33,6 +37,6 @@ class CreateEventPlayerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_player');
+        Schema::dropIfExists('event_subscriptions');
     }
 }

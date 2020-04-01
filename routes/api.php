@@ -52,3 +52,10 @@ Route::get('profile/{id}/locations', 'LocationController@userAll');
 
 Route::apiResource('events', 'EventController')->middleware('data.transform');
 Route::get('profile/{id}/events', 'EventController@userAll')->middleware('data.transform');
+
+Route::get('profile/{id}/subscriptions', 'EventController@userAllSubscriptions');
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::put('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@update');
+    Route::delete('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@destroy');
+});

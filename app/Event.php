@@ -44,6 +44,11 @@ class Event extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * Convert the collection into a plain PHP array.
+     *
+     * @return array
+     */
     public function toArray()
     {
         $toArray = parent::toArray();
@@ -88,5 +93,36 @@ class Event extends Model
     public function host()
     {
         return $this->hasOne('App\Profile', 'id', 'userId');
+    }
+
+    /**
+     * Get the Event's Subscription of the current User.
+     */
+    public function subscription()
+    {
+        return $this->hasOne('App\EventSubscription', 'eventId', 'id')->where('userId', Auth('api')->id());
+    }
+
+    /**
+     * Get a list of the Event's Subscriptions for the Host to administrate.
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany('App\EventSubscription', 'eventId', 'id')->with('profile');
+    }
+
+    /**
+     * Get the Profiles that have subscribe to the Event.
+     */
+    public function players()
+    {
+        return $this->hasManyThrough(
+            'App\Profile',
+            'App\EventSubscription',
+            'eventId',
+            'userId',
+            'id',
+            'userId'
+        );
     }
 }
