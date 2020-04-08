@@ -19,19 +19,6 @@ class TransformData
         $inputChanged = false;
 
         /**
-         * Transform Timestamp inputs to String
-         */
-
-        $dateKeys = ['birthdate', 'startDatetime', 'endDatetime'];
-
-        foreach ($dateKeys as $dateKey) {
-            if (isset($input[$dateKey]) && $input[$dateKey] != null) {
-                $input[$dateKey] = $this->timestampToString($input[$dateKey]);
-                $inputChanged = true;
-            }
-        }
-
-        /**
          * Get the foreign key from encapsuled objects
          */
 
@@ -51,7 +38,7 @@ class TransformData
         }
 
         /**
-         * Refresh the Request
+         * Update the Request
          */
 
         if ($inputChanged) {

@@ -53,7 +53,9 @@ Initialize :
 -   [Create a migration](https://laravel.com/docs/7.x/migrations#generating-migrations) : `php artisan make:migration create_users_table`
 -   [Run all of the outstanding migrations](https://laravel.com/docs/7.x/migrations#running-migrations) : `php artisan migrate`, to force the commands to run without a prompt, use the `--force` flag
 -   [Roll back the latest migration operation](https://laravel.com/docs/7.x/migrations#rolling-back-migrations) : `php artisan migrate:rollback`
+-   Roll back all migrations: `php artisan migrate:reset`
 -   Drop All Tables & Migrate : `php artisan migrate:fresh --seed`
+-   Convert migration to SQL query : `php artisan migrate --pretend --no-ansi > database/migrate.sql`
 
 #### Seeders
 

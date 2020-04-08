@@ -21,8 +21,8 @@ class CreateEventsTable extends Migration
 
             // Datetime
 
-            $table->timestamp('startDatetime')->nullable();
-            $table->timestamp('endDatetime')->nullable();
+            $table->dateTime('startDatetime')->nullable();
+            $table->dateTime('endDatetime')->nullable();
 
             // Location
 
