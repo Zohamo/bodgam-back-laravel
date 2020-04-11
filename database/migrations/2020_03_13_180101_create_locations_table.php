@@ -37,7 +37,7 @@ class CreateLocationsTable extends Migration
 
             // Details
 
-            $table->longText('description')->nullable();
+            $table->string('description', 255)->nullable();
             $table->boolean('isAllowedSmoking')->default(0);
             $table->boolean('isAccessible')->default(0);
 

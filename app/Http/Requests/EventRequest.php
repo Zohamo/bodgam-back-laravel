@@ -29,7 +29,7 @@ class EventRequest extends FormRequest
             'endDatetime'   => 'bail|nullable|date|after:startDatetime',
             'minPlayers'    => 'bail|nullable|numeric',
             'maxPlayers'    => 'bail|nullable|numeric',
-            'description'   => 'bail|nullable|string|max:255',
+            'description'   => 'bail|nullable|string|max:5000',
             'level'         => 'bail|required|numeric',
             'atmosphere'    => 'bail|required|numeric',
         ];

@@ -41,7 +41,7 @@ class CreateEventsTable extends Migration
 
             // Details
 
-            $table->longText('description')->nullable();
+            $table->text('description', 5000)->nullable();
             $table->unsignedTinyInteger('level')->nullable();
             $table->unsignedTinyInteger('atmosphere')->nullable();
 

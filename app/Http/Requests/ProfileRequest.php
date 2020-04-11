@@ -29,7 +29,7 @@ class ProfileRequest extends FormRequest
             'email'       => 'bail|required|email',
             'avatar'      => 'bail|nullable|image|dimensions:max_width=250,max_height=250',
             'gender'      => 'bail|nullable|string|max:6',
-            'description' => 'bail|nullable|string|max:255',
+            'description' => 'bail|nullable|string|max:5000',
             'birthdate'   => 'bail|nullable|date|before:today',
             'bggName'     => 'bail|nullable|string|max:128',
             'phoneNumber' => 'bail|nullable|string|max:48',
