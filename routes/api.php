@@ -45,6 +45,7 @@ Route::put('profile/{id}/privacy', 'ProfilePrivacyController@update');
 
 Route::apiResource('locations', 'LocationController');
 Route::get('profile/{id}/locations', 'LocationController@userAll');
+Route::get('location/{id}/events', 'LocationController@allEvents');
 
 /**
  * Events

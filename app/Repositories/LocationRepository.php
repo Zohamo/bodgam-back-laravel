@@ -37,6 +37,68 @@ class LocationRepository extends Repository
     }
 
     /**
+     * Unset the Default Location to Default
+     *
+     * @param  array $data
+     * @return
+     */
+    private function unsetDefaultLocation(array $data)
+    {
+        $records = $this->model
+            ->where('isDefault', true)
+            ->when(
+                $data['id'],
+                function ($query, $locationId) {
+                    return $query->where('id', '!=', $locationId);
+                }
+            )
+            ->get();
+
+        if ($records) {
+            foreach ($records as $record) {
+                $record->update(['isDefault' => false]);
+            }
+        }
+    }
+
+    /**
+     * Create a new record in the database
+     *
+     * @param  array $data
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function create(array $data)
+    {
+        if ($data['isDefault']) {
+            $this->unsetDefaultLocation($data);
+        }
+
+        return $this->model->create($data);
+    }
+
+    /**
+     * Update record in the database
+     *
+     * @param  array $data
+     * @param  int $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function update(array $data, $id)
+    {
+        if ($data['isDefault']) {
+            $this->unsetDefaultLocation($data);
+        }
+
+        $record = $this->model->find($id);
+        if ($record) {
+            $record->update($data);
+            return $record;
+        }
+
+        return null;
+    }
+
+    /**
      * Remove record from the database
      *
      * @param  int $id
@@ -46,8 +108,10 @@ class LocationRepository extends Repository
     {
         // Check if an Event uses the Location
         $event = new EventRepository(new Event());
-        $event->show($id);
+        $eventRecord = $event->show($id);
 
-        return $event->model->exists ? $this->model->destroy($id) : $this->model->forceDelete($id);
+        $location = $this->model->withTrashed()->find($id);
+
+        return $eventRecord ? $location->destroy($id) : $location->forceDelete($id);
     }
 }

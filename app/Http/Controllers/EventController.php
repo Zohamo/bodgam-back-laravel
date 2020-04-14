@@ -145,7 +145,9 @@ class EventController extends Controller
      */
     public function destroy(int $id)
     {
-        return Auth('api')->id() == $id
+        $event = $this->model->show($id);
+
+        return $event['userId'] === Auth('api')->id()
             ? response()->json($this->model->delete($id))
             : response()->json(
                 config('messages.401'),

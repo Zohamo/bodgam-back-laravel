@@ -125,7 +125,7 @@ class Repository implements RepositoryInterface
      */
     public function restore(int $id)
     {
-        return $this->model->history()->restore($id);
+        return $this->model->restore($id);
     }
 
     /**

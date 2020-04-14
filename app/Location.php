@@ -48,4 +48,12 @@ class Location extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get a list of the Events that use this Location.
+     */
+    public function events()
+    {
+        return $this->hasMany('App\Event', 'locationId', 'id');
+    }
 }

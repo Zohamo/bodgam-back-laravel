@@ -49,7 +49,9 @@ class Event extends Model
      */
     public function location()
     {
-        return $this->hasOne('App\Location', 'id', 'locationId');
+        return $this->hasOne('App\Location', 'id', 'locationId')
+            ->withTrashed()
+            ->select(['id', 'name', 'isDefault', 'isPublic', 'district', 'city', 'country', 'isAllowedSmoking', 'isAccessible', 'deleted_at']);
     }
 
     /**

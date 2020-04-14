@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use App\Http\Requests\LocationRequest;
 use App\Location;
+use App\Repositories\EventRepository;
 use App\Repositories\LocationRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +32,19 @@ class LocationController extends Controller
     }
 
     /**
+     * Send a 401 error if the User is not authorized.
+     *
+     * @param  int  $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function checkIfUserIsAuthorized(int $userId)
+    {
+        if ($userId != Auth('api')->id()) {
+            return response()->json(config('messages.401'), 401);
+        }
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -50,6 +66,21 @@ class LocationController extends Controller
         $this->queryAllOptions['userId'] = $id;
         $this->queryAllOptions['isAdmin'] = Auth('api')->id() == $id;
         return response()->json($this->model->allWithOptions($this->queryAllOptions));
+    }
+
+    /**
+     * Display a listing of the Events related to a specific Location.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function allEvents(int $id)
+    {
+        $location = $this->model->with('events')->find($id);
+
+        $this->checkIfUserIsAllowed($location['userId']);
+
+        return response()->json($location['events']);
     }
 
     /**
@@ -89,21 +120,16 @@ class LocationController extends Controller
     {
         $location = $this->model->show($id);
 
-        if ($location['userId'] === Auth('api')->id()) {
-            return response()->json(
-                $this->model->update(
-                    $request->only(
-                        $this->model->getModel()->fillable
-                    ),
-                    $id
-                )
-            );
-        } else {
-            return response()->json(
-                config('messages.401'),
-                401
-            );
-        }
+        $this->checkIfUserIsAuthorized($location['userId']);
+
+        return response()->json(
+            $this->model->update(
+                $request->only(
+                    $this->model->getModel()->fillable
+                ),
+                $id
+            )
+        );
     }
 
     /**
@@ -114,11 +140,19 @@ class LocationController extends Controller
      */
     public function destroy(int $id)
     {
-        return Auth('api')->id() == $id
-            ? response()->json($this->model->delete($id))
-            : response()->json(
-                config('messages.401'),
-                401
-            );
+        $location = $this->model->with('events')->find($id);
+
+        $this->checkIfUserIsAuthorized($location['userId']);
+
+        foreach ($location['events'] as $event) {
+            if ($event['startDatetime'] > Carbon::today()) {
+                return response()->json(
+                    config('This Location is in use in an Event to come.'),
+                    403
+                );
+            }
+        }
+
+        return response()->json($this->model->delete($id));
     }
 }
