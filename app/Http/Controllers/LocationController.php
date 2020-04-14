@@ -91,8 +91,22 @@ class LocationController extends Controller
      */
     public function show(int $id)
     {
-        $location = $this->model->show($id);
-        return $location ? response()->json($location) : response('null');
+        $location = $this->model->with('events.players')->find($id);
+        $response = $location ? response()->json($location) : response('null');
+
+        if ($location['userId'] == Auth('api')->id()) {
+            return $response;
+        }
+
+        foreach ($location['events'] as $event) {
+            foreach ($event['players'] as $player) {
+                if ($player['id'] == Auth('api')->id()) {
+                    return $response;
+                }
+            }
+        }
+
+        return response()->json(config('messages.401'), 401);
     }
 
     /**

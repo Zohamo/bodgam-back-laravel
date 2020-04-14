@@ -59,7 +59,7 @@ class Event extends Model
      */
     public function host()
     {
-        return $this->hasOne('App\Profile', 'id', 'userId');
+        return $this->hasOne('App\Profile', 'id', 'userId')->withTrashed()->select(['id', 'name', 'gender']);
     }
 
     /**
@@ -90,6 +90,6 @@ class Event extends Model
             'userId',
             'id',
             'userId'
-        );
+        )->select(['id', 'name', 'gender']);
     }
 }
