@@ -52,11 +52,15 @@ class ProfileRepository extends Repository
      */
     public function update(array $data, $id)
     {
-        $record = $this->model::with(['privacy', 'ratings'])->find($id);
+        $record = $this->model->find($id);
+
         if ($record) {
+            $privacy = new ProfilePrivacyRepository(new ProfilePrivacy);
+            $privacy->update($data['privacy'], $id);
             $record->update($data);
-            return $record;
+            return $this->model::with(['privacy', 'ratings'])->find($id);
         }
+
         return null;
     }
 
