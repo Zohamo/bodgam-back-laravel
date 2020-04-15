@@ -47,13 +47,10 @@ class EventSubscriptionRepository extends Repository
     public function update(array $data, $id)
     {
         $record = $this->model
-            ::where(
-                [
-                    'userId' => $data['userId'],
-                    'eventId' => $data['eventId']
-                ]
-            )
-            ->first();
+            ::where([
+                'userId' => $data['userId'],
+                'eventId' => $data['eventId']
+            ])->first();
 
         $result = $record ? $record->update($data) : $this->model->create($data);
 

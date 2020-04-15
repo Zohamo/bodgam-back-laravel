@@ -78,7 +78,7 @@ class LocationController extends Controller
     {
         $location = $this->model->with('events')->find($id);
 
-        $this->checkIfUserIsAllowed($location['userId']);
+        $this->checkIfUserIsAuthorized($location['userId']);
 
         return response()->json($location['events']);
     }

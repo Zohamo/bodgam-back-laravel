@@ -56,6 +56,7 @@ Initialize :
 -   Roll back all migrations: `php artisan migrate:reset`
 -   Drop All Tables & Migrate : `php artisan migrate:fresh --seed`
 -   Convert migration to SQL query : `php artisan migrate --pretend --no-ansi > database/migrate.sql`
+-   Copy SQL database : `mysqldump -uroot -p database_name > dumpfilename.sql`
 
 #### Seeders
 
