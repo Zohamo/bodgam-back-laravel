@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Laravel\Passport\HasApiTokens;
 /**
  * User Model
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, Notifiable, SoftDeletes;
 
@@ -80,5 +81,13 @@ class User extends Authenticatable
     public function eventSubscriptions()
     {
         return $this->hasMany('App\EventSubscription', 'eventId');
+    }
+
+    /**
+     * Send an email to verify user's email
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 }

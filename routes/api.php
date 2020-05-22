@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/* Route::get('profile', function () {
+    // Only verified users may enter...
+})->middleware('verified'); */
+
 Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
+Route::post('email/resend', 'VerificationController@resend')->name('verification.resend');
 
 /**
  * User
@@ -24,6 +32,7 @@ Route::middleware('auth:api')->get('user', function (Request $request) {
 
 Route::post('register', 'UserController@store');
 Route::post('login', 'UserController@login');
+Route::get('user/{id}/email/verified', 'UserController@hasVerifiedEmail');
 // à tester
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user/{id}', 'UserController@show');

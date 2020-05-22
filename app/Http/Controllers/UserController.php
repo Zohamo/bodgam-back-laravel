@@ -9,6 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Repositories\UserRepository;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * User Controller
@@ -37,12 +38,27 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        $user = $this->model->create(
+            $request->only($this->model->getModel()->fillable)
+        );
+
+        User::findOrFail($user['id'])->sendEmailVerificationNotification();
+
+        return response()->json($user);
+    }
+
+    /**
+     * Check if user's email is verified.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function hasVerifiedEmail(int $id)
+    {
+        $user = $this->model->show($id);
+
         return response()->json(
-            $this->model->create(
-                $request->only(
-                    $this->model->getModel()->fillable
-                )
-            )
+            $user ? $user->hasVerifiedEmail() : 0
         );
     }
 

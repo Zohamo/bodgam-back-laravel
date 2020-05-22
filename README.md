@@ -12,16 +12,22 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 
 ## Commands
 
--   Run Laravel server : `php artisan serve`
--   Restart Apache server : `sudo /etc/init.d/apache2 restart`
--   Run MySQL : `sudo /usr/bin/mysql -u root -p`
+### Install
 
-Initialize :
+-   Install dependencies : `composer install`
+
+### Initialize
 
 -   Drop All Tables & Migrate : `php artisan migrate:fresh --seed`
 -   Passport : `php artisan passport:client --personal` or `php artisan passport:install`
 
-### Basic Commands
+### Run
+
+-   Run Laravel server : `php artisan serve`
+-   Restart Apache server : `sudo /etc/init.d/apache2 restart`
+-   Run MySQL : `sudo /usr/bin/mysql -u root -p`
+
+### Artisan Make
 
 #### Model
 
