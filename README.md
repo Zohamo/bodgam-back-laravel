@@ -89,11 +89,20 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 -   [Available Validation Rules](https://laravel.com/docs/5.8/validation#available-validation-rules)
 -   [Laravel Daily](https://laraveldaily.com/)
--   [Laravel API Tutorial: How to Build and Test a RESTful API](https://www.toptal.com/laravel/restful-laravel-api-tutorial)
 
 ### Laravel Best Practices
 
 Top 10 Laravel Best Practices You Should Follow [from Sree](https://www.innofied.com/top-10-laravel-best-practices/)
+
+### Laravel Tutorials
+
+-   [Laravel API Tutorial: How to Build and Test a RESTful API](https://www.toptal.com/laravel/restful-laravel-api-tutorial)
+
+#### API Rest with Laravel 5.6 Passport Authentication
+
+[GitHub](https://github.com/modulr/api-laravel-passport)
+
+4.  [Reset Password](https://medium.com/modulr/api-rest-with-laravel-5-6-passport-authentication-reset-password-part-4-50d27455dcca)
 
 ## Issues
 

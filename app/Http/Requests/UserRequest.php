@@ -29,7 +29,7 @@ class UserRequest extends FormRequest
         return [
             'name'     => 'bail|required|string|max:64',
             'email'    => 'bail|required|email|unique:users',
-            'password' => 'required'
+            'password' => 'required|string|min:6'
         ];
     }
 

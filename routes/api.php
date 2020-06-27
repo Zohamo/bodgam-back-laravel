@@ -23,9 +23,6 @@ Route::middleware('auth:api')->get('user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
-Route::post('email/resend', 'VerificationController@resend')->name('verification.resend');
-
 /**
  * User
  */
@@ -33,11 +30,18 @@ Route::post('email/resend', 'VerificationController@resend')->name('verification
 Route::post('register', 'UserController@store');
 Route::post('login', 'UserController@login');
 Route::get('user/{id}/email/verified', 'UserController@hasVerifiedEmail');
+
+Route::post('email/resend', 'VerificationController@resend')->name('verification.resend');
+Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
+
+require __DIR__ . '/auth/passwordReset.php';
+
 // à tester
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user/{id}', 'UserController@show');
     Route::put('user/{id}', 'UserController@update');
     Route::delete('user/{id}', 'UserController@destroy'); // ok
+    // Route::post('password/change', 'UserController@changePassword');
 });
 
 /**

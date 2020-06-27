@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
 use App\User;
 use App\Http\Requests\UserRequest;
 use App\Repositories\UserRepository;
-
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 /**
  * User Controller
