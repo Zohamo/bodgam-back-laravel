@@ -16,6 +16,7 @@ use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasApiTokens, Notifiable, SoftDeletes;
+    protected $emailNotification;
 
     /**
      * The attributes that are mass assignable.
@@ -84,11 +85,18 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->hasMany('App\EventSubscription', 'eventId');
     }
 
+    public function setEmailNotification($emailNotification)
+    {
+        $this->emailNotification = $emailNotification;
+    }
+
     /**
      * Send an email to verify user's email
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new VerifyEmail);
+        $verifyEmail = new VerifyEmail;
+        $verifyEmail->setContent($this->emailNotification);
+        $this->notify($verifyEmail);
     }
 }

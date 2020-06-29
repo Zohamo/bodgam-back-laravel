@@ -1,17 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Repositories\UserRepository;
+use App\Http\Controllers\Controller;
 use App\User;
-use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Verified;
 
-class VerificationController extends Controller
+class EmailVerificationController extends Controller
 {
-    // use VerifiesEmails;
-
     /**
      * Mark the authenticated user's email address as verified.
      *

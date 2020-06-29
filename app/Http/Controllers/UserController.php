@@ -28,7 +28,7 @@ class UserController extends Controller
 
     /**
      * Register API
-     * Store a newly created resource in storage.
+     * Store a newly created User in storage.
      *
      * @param  UserRequest  $request
      * @return \Illuminate\Http\JsonResponse
@@ -39,7 +39,9 @@ class UserController extends Controller
             $request->only($this->model->getModel()->fillable)
         );
 
-        User::findOrFail($user['id'])->sendEmailVerificationNotification();
+        $userModel = User::findOrFail($user['id']);
+        $userModel->setEmailNotification($request['verificationEmail']);
+        $userModel->sendEmailVerificationNotification();
 
         return response()->json($user);
     }
