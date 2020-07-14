@@ -24,12 +24,22 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 ### Run
 
 -   Run Laravel server : `php artisan serve`
+
+### Deploy
+
+1. Switch **.env** to the proper environment settings
+2. [Autoloader Optimization](https://laravel.com/docs/7.x/deployment#autoloader-optimization) : `composer install --optimize-autoloader --no-dev`
+3. `php artisan optimize`
+4. `composer dumpautoload -o`
+
+### Helpers
+
 -   Restart Apache server : `sudo /etc/init.d/apache2 restart`
 -   Run MySQL : `sudo /usr/bin/mysql -u root -p`
 
-### Artisan Make
+### Artisan
 
-#### Model
+#### Artisan Make:Model
 
 [Create a model](https://laravel.com/docs/5.8/eloquent#defining-models) : `php artisan make:model User -mc`
 
@@ -38,7 +48,7 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 -   `--migration` or `-m` : Create a new migration file for the model.
 -   `--controller` or `-c` : Create a new controller file for the model.
 
-#### Controller
+#### Artisan Make:Controller
 
 [Create a controller](https://laravel.com/docs/5.7/controllers) : `php artisan make:controller UserController --api --model=User`
 
@@ -48,13 +58,13 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 -   `--model=Photo` : If you are using route model binding and would like the resource controller’s methods to type-hint a model instance.
 -   `--invokable` : Generates controller with one \_\_invoke() method. [Invokable Controllers with One Specific Action](https://laraveldaily.com/invokable-controllers-with-one-specific-action/)
 
-#### Request
+#### Artisan Make:Request
 
 [Create a request](https://medium.com/@kamerk22/the-smart-way-to-handle-request-validation-in-laravel-5e8886279271) : `php artisan make:request UserRequest`
 
 ### Database Commands
 
-#### Migrations
+#### Artisan Make:Migration
 
 -   [Create a migration](https://laravel.com/docs/7.x/migrations#generating-migrations) : `php artisan make:migration create_users_table`
 -   [Run all of the outstanding migrations](https://laravel.com/docs/7.x/migrations#running-migrations) : `php artisan migrate`, to force the commands to run without a prompt, use the `--force` flag
@@ -62,16 +72,22 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 -   Roll back all migrations: `php artisan migrate:reset`
 -   Drop All Tables & Migrate : `php artisan migrate:fresh --seed`
 -   Convert migration to SQL query : `php artisan migrate --pretend --no-ansi > database/migrate.sql`
--   Copy SQL database : `mysqldump -uroot -p database_name > dumpfilename.sql`
 
-#### Seeders
+#### Artisan Make:Seeders
 
 -   [Create a seeder](https://laravel.com/docs/7.x/seeding#writing-seeders) : `php artisan make:seeder UsersTableSeeder`
 -   [Running Seeders](https://laravel.com/docs/7.x/seeding#running-seeders) : `php artisan db:seed`
 
 [6 Tips About Data Seeding in Laravel](https://laraveldaily.com/10-tips-about-data-seeding-in-laravel/)
 
-## About Laravel
+#### MySQL Export
+
+-   Copy SQL database : `mysqldump -uroot -p database_name > dump_database.sql`
+-   Copy SQL table : `mysqldump -uroot -p database_name table_name > dump_table.sql`
+
+## Laravel
+
+Laravel version 6.7.1
 
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
@@ -106,14 +122,15 @@ Top 10 Laravel Best Practices You Should Follow [from Sree](https://www.innofied
 
 ## Issues
 
--   `php artisan migrate` returns error `Illuminate\Database\QueryException could not find driver`
-    fix : `sudo apt install php7.2-pdo php7.2-mysql`
+### # `php artisan migrate` returns error `Illuminate\Database\QueryException could not find driver`
 
--   fix to implement [Composite keys](https://stackoverflow.com/questions/36332005/laravel-model-with-two-primary-keys-update) :
+-   fix : `sudo apt install php7.2-pdo php7.2-mysql`
+
+### # implement [Composite keys](https://stackoverflow.com/questions/36332005/laravel-model-with-two-primary-keys-update) to use two primary keys
+
+-   in _\App\your_model.php_ :
 
 ```
-in \App\your_model.php
-
 protected $primaryKey = ['user_id', 'stock_id'];
 public $incrementing = false;
 
