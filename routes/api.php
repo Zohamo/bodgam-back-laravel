@@ -73,3 +73,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@update');
     Route::delete('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@destroy');
 });
+
+/**
+ * Admin
+ */
+Route::get('ping', 'Admin\ToolsController@ping');
