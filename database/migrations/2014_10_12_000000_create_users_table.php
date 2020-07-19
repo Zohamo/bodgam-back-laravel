@@ -25,6 +25,11 @@ class CreateUsersTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            // FK
+
+            $table->unsignedTinyInteger('role')->default(6);
+            $table->foreign('role')->references('id')->on('user_roles');
         });
     }
 

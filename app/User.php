@@ -41,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
      * @var array
      */
     protected $visible = [
-        'id', 'name', 'email',
+        'id', 'name', 'email', 'role',
     ];
 
     /**
@@ -72,8 +72,17 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
             'id' => $user->id,
             'name' =>  $user->name,
             'email' =>  $user->email,
+            'role' => $user->role()->first()->role,
             'token' => $user->createToken('BodGam')->accessToken
         ];
+    }
+
+    /**
+     * Get the Role of the User.
+     */
+    public function role()
+    {
+        return $this->hasOne('App\UserRole', 'id', 'role');
     }
 
     /**

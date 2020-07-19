@@ -79,6 +79,26 @@ class UserController extends Controller
     }
 
     /**
+     * Retrieve the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get()
+    {
+        if (!Auth::id()) {
+            return response()->json(
+                config('messages.401'),
+                401
+            );
+        }
+
+        return response()->json(
+            $this->model->show(Auth::id())
+        );
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int $id

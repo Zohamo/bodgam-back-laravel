@@ -38,6 +38,7 @@ require __DIR__ . '/auth/passwordReset.php';
 
 // à tester
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('user', 'UserController@get');
     Route::get('user/{id}', 'UserController@show');
     Route::put('user/{id}', 'UserController@update');
     Route::delete('user/{id}', 'UserController@destroy'); // ok

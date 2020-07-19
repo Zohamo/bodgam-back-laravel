@@ -22,9 +22,9 @@ class EventSubscriptionRepository extends Repository
     }
 
     /**
-     * Show the record with the given id
+     * Show the record with the given ids
      *
-     * @param  int  $id
+     * @param  array  $options
      * @return App\EventSubscription
      */
     public function showWithOptions(array $options)

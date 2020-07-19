@@ -21,7 +21,8 @@ class UserRepository extends Repository
         $user = $this->model->create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'roleId' => 6
         ]);
 
         // Create associated Profile
@@ -30,6 +31,19 @@ class UserRepository extends Repository
         $profile->create($data);
 
         return $this->getModel()->prepareResponse($user);
+    }
+
+    /**
+     * Show the record with the given id
+     *
+     * @param  int  $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function show(int $id)
+    {
+        return $this->getModel()->prepareResponse(
+            $this->model->find($id)
+        );
     }
 
     /**
