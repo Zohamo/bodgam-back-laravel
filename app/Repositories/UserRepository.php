@@ -47,6 +47,17 @@ class UserRepository extends Repository
     }
 
     /**
+     * Check if the user's email has been verified
+     *
+     * @param  int  $id
+     * @return bool
+     */
+    public function hasVerifiedEmail(int $id)
+    {
+        return $this->model->find($id)->hasVerifiedEmail();
+    }
+
+    /**
      * Remove record from the database
      *
      * @param  int $id

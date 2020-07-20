@@ -52,11 +52,7 @@ class UserController extends Controller
      */
     public function hasVerifiedEmail(int $id)
     {
-        $user = $this->model->show($id);
-
-        return response()->json(
-            $user ? $user->hasVerifiedEmail() : 0
-        );
+        return response()->json($this->model->hasVerifiedEmail($id) ? 1 : 0);
     }
 
     /**
