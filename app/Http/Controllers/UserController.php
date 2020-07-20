@@ -137,7 +137,7 @@ class UserController extends Controller
      */
     public function destroy(int $id)
     {
-        return Auth('api')->id() == $id
+        return Auth('api')->id() == $id || $this->model->show(Auth('api')->id())['role'] == "SUPER_ADMIN"
             ? response()->json($this->model->delete($id))
             : response()->json(
                 config('messages.401'),
