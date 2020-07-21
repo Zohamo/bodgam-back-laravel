@@ -41,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
      * @var array
      */
     protected $visible = [
-        'id', 'name', 'email', 'role',
+        'id', 'name', 'email', 'role', 'email_verified_at'
     ];
 
     /**
@@ -72,6 +72,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
             'id' => $user->id,
             'name' =>  $user->name,
             'email' =>  $user->email,
+            'emailVerified' =>  (bool) $user->email_verified_at,
             'role' => $user->role()->first()->role,
             'token' => $user->createToken('BodGam')->accessToken
         ];

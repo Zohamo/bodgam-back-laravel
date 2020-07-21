@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,67 +13,70 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/* Route::get('profile', function () {
-    // Only verified users may enter...
-})->middleware('verified'); */
-
-Route::middleware('auth:api')->get('user', function (Request $request) {
-    return $request->user();
-});
-
 /**
  * User
  */
 
 Route::post('register', 'UserController@store');
 Route::post('login', 'UserController@login');
-Route::get('user/{id}/email/verified', 'UserController@hasVerifiedEmail');
 
-Route::post('email/resend', 'VerificationController@resend')->name('verification.resend');
-Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
-
+require __DIR__ . '/auth/emailVerification.php';
 require __DIR__ . '/auth/passwordReset.php';
 
-// à tester
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user', 'UserController@get');
-    Route::get('user/{id}', 'UserController@show');
-    Route::put('user/{id}', 'UserController@update');
-    Route::delete('user/{id}', 'UserController@destroy'); // ok
+    // Route::get('users/{id}', 'UserController@show');
+    // Route::put('users/{id}', 'UserController@update');
+    Route::delete('users/{id}', 'UserController@destroy');
     // Route::post('password/change', 'UserController@changePassword');
 });
-
-/**
- * Profile
- */
-
-Route::apiResource('profiles', 'ProfileController')->middleware('data.transform');
-Route::get('profile/{id}/privacy', 'ProfilePrivacyController@show');
-Route::put('profile/{id}/privacy', 'ProfilePrivacyController@update');
-
-/**
- * Locations
- */
-
-Route::apiResource('locations', 'LocationController');
-Route::get('profile/{id}/locations', 'LocationController@userAll');
-Route::get('location/{id}/events', 'LocationController@allEvents');
 
 /**
  * Events
  */
 
-Route::apiResource('events', 'EventController')->middleware('data.transform');
-Route::get('profile/{id}/events', 'EventController@userAll')->middleware('data.transform');
+Route::get('events', 'EventController@index')->middleware('data.transform');
 
-Route::get('profile/{id}/subscriptions', 'EventController@userAllSubscriptions');
+Route::group(['middleware' => ['auth:api', 'verified', 'data.transform']], function () {
+    Route::get('events/{id}', 'EventController@show');
+    Route::post('events', 'EventController@store');
+    Route::put('events/{id}', 'EventController@update');
+    Route::delete('events/{id}', 'EventController@destroy');
+});
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => ['auth:api', 'verified']], function () {
     Route::put('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@update');
     Route::delete('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@destroy');
+    Route::get('profiles/{id}/events', 'EventController@userAll')->middleware('data.transform');
+    Route::get('profiles/{id}/subscriptions', 'EventController@userAllSubscriptions');
+});
+
+/**
+ * Profiles
+ */
+
+Route::group(['middleware' => ['auth:api', 'data.transform']], function () {
+    Route::get('profiles', 'ProfileController@index')->middleware('verified');
+    Route::get('profiles/{id}', 'ProfileController@show');
+    Route::put('profiles/{id}', 'ProfileController@update');
+    // Route::get('profiles/{id}/privacy', 'ProfilePrivacyController@show');
+    Route::put('profiles/{id}/privacy', 'ProfilePrivacyController@update');
+});
+
+/**
+ * Locations
+ */
+
+Route::group(['middleware' => ['auth:api', 'verified']], function () {
+    Route::apiResource('locations', 'LocationController');
+    Route::get('profiles/{id}/locations', 'LocationController@userAll');
+    Route::get('locations/{id}/events', 'LocationController@allEvents');
 });
 
 /**
  * Admin
  */
-Route::get('ping', 'Admin\ToolsController@ping');
+
+Route::group(['middleware' => ['auth:api', 'verified']], function () {
+    Route::get('ping', 'Admin\ToolsController@ping');
+});
