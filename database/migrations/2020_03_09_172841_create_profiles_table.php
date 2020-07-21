@@ -23,7 +23,7 @@ class CreateProfilesTable extends Migration
 
             $table->binary('avatar')->nullable();
             $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable();
-            $table->text('description', 5000)->nullable();
+            $table->text('description', 2048)->nullable();
             $table->date('birthdate')->nullable();
             $table->string('bggName', 128)->nullable();
             $table->string('phoneNumber', 48)->nullable();
