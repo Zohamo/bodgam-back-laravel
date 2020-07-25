@@ -31,6 +31,7 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 2. [Autoloader Optimization](https://laravel.com/docs/7.x/deployment#autoloader-optimization) : `composer install --optimize-autoloader --no-dev`
 3. `php artisan optimize`
 4. `composer dumpautoload -o`
+5. `php artisan route:clear` + `php artisan config:clear` + `php artisan cache:clear`
 
 ### Helpers
 
