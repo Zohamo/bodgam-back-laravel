@@ -29,7 +29,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Route::put('users/{id}', 'UserController@update');
     Route::delete('users/{id}', 'UserController@destroy');
     // Route::post('password/change', 'UserController@changePassword');
+
+    Route::get('user/notifications', 'NotificationController@user');
+    Route::get('user/notifications/unread', 'NotificationController@userUnread');
+    Route::get('user/notifications/{id}/read', 'NotificationController@read');
 });
+
 
 /**
  * Events
@@ -78,5 +83,6 @@ Route::group(['middleware' => ['auth:api', 'verified']], function () {
  */
 
 Route::group(['middleware' => ['auth:api', 'verified']], function () {
-    Route::get('ping', 'Admin\ToolsController@ping');
+    Route::get('admin/ping', 'Admin\ToolsController@ping');
+    Route::post('admin/push', 'Admin\ToolsController@push');
 });

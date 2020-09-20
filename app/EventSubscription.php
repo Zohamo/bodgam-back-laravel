@@ -48,6 +48,7 @@ class EventSubscription extends Model
 
     /**
      * Get hasConfirmed attribute.
+     * Obsolete ?
      *
      * @param  int  $value
      * @return int
@@ -81,11 +82,53 @@ class EventSubscription extends Model
     }
 
     /**
-     * Get the Profile of the Subscription.
+     * Get the short Event of the Subscription.
+     */
+    public function eventShort()
+    {
+        return $this
+            ->hasOne('App\Event', 'id', 'eventId')
+            ->with('host');
+    }
+
+    /**
+     * Get the host's Profile of the Event.
+     */
+    public function host()
+    {
+        return $this->hasOneThrough('App\Profile', 'App\Event', 'id',  'id',  'eventId',  'userId');
+    }
+
+    /**
+     * Get the Profile of the Subscriptor.
      */
     public function profile()
     {
         return $this->hasOne('App\Profile', 'id', 'userId')->select(['id', 'name']);
+    }
+
+    /**
+     * Prepare the data sent into the notification (database + broadcast).
+     */
+    public function notificationData($record)
+    {
+        return [
+            "event" => [
+                'id' => $record->eventId,
+                'title' => $record->eventShort['title'],
+                'host' => [
+                    'id' => $record->eventShort['host']['id'],
+                    'name' => $record->eventShort['host']['name'],
+                    'gender' => $record->eventShort['host']['gender']
+                ]
+            ],
+            "user" => [
+                'id' => $record->userId,
+                'name' => $record->profile['name']
+            ],
+            "hasConfirmed" => $record->hasConfirmed,
+            "isAccepted" => $record->isAccepted
+        ];
     }
 
     /**

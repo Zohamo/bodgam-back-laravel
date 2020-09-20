@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -16,3 +17,12 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+/* TODO : remove because useless !?
+Broadcast::channel('event-notifications', function () {
+    return Auth::check();
+});
+
+Broadcast::channel('admin', function () {
+    return Auth::check();
+}); */

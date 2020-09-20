@@ -2,6 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Events\UserEventSubscriptionEvent;
+use App\Notifications\UserEventSubscription;
+
 /**
  * Event Subscription Repository
  */
@@ -25,7 +28,7 @@ class EventSubscriptionRepository extends Repository
      * Show the record with the given ids
      *
      * @param  array  $options
-     * @return App\EventSubscription
+     * @return \App\EventSubscription
      */
     public function showWithOptions(array $options)
     {
@@ -42,7 +45,7 @@ class EventSubscriptionRepository extends Repository
      *
      * @param  array $data
      * @param  int $id
-     * @return App\EventSubscription
+     * @return array
      */
     public function update(array $data, $id)
     {
@@ -54,7 +57,35 @@ class EventSubscriptionRepository extends Repository
 
         $result = $record ? $record->update($data) : $this->model->create($data);
 
-        return $result ? $data : null;
+        if ($result) {
+            /**
+             * Notification
+             */
+            $record = $this->model
+                ::where([
+                    'userId' => $data['userId'],
+                    'eventId' => $data['eventId']
+                ])->with(['profile', 'eventShort'])
+                ->first();
+
+            if ($record->isAccepted === null) {
+                $notifiable = $record->host;
+                $fromId = $record->host->id;
+            } else {
+                $notifiable = $record->profile;
+                $fromId = $record->profile->id;
+            }
+            $dataToNotify = $this->model->notificationData($record);
+            // Notification to database
+            $notifiable->notify(new UserEventSubscription($dataToNotify, $fromId));
+            // Notification to Pusher
+            // TODO : find a better way to retrieve the notification's id ($this->id from UserEventSubscription returns null)
+            event(new UserEventSubscriptionEvent($fromId, $dataToNotify, $notifiable->notifications->first()->getKey()));
+
+            return $data;
+        }
+
+        return null;
     }
 
     /**

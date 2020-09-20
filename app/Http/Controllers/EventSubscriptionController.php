@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use App\Events\EventSubscriptionEvent;
+use App\Events\UserNotificationEvent;
 use App\EventSubscription;
 use App\Http\Requests\EventSubscriptionRequest;
 use App\Repositories\EventRepository;
@@ -55,10 +57,10 @@ class EventSubscriptionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the user's subscription to an event.
      *
-     * @param  \App\Http\Requests\EventSubscriptionRequest  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\EventSubscriptionRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(EventSubscriptionRequest $request, int $id)
@@ -66,14 +68,14 @@ class EventSubscriptionController extends Controller
         $input = $request->only($this->model->getModel()->fillable);
 
         $event = new EventRepository(new Event());
-        $record = $event->show($input['eventId']);
+        $event = $event->show($input['eventId']);
 
         switch (Auth('api')->id()) {
             case $input['userId']:
                 // User is a Subscriptor
                 $input['isAccepted'] = null;
                 break;
-            case $record->userId:
+            case $event->userId:
                 // User is the Host/Administrator
                 break;
             default:
@@ -84,9 +86,7 @@ class EventSubscriptionController extends Controller
                 );
         }
 
-        return response()->json(
-            $this->model->update($input, $id)
-        );
+        return response()->json($this->model->update($input, $id));
     }
 
     /**
@@ -98,16 +98,16 @@ class EventSubscriptionController extends Controller
      */
     public function destroy(int $eventId, int $userId)
     {
-        return Auth('api')->id() == $userId
-            ? response()->json(
-                $this->model->deleteWithOptions([
-                    "eventId" => $eventId,
-                    "userId" => $userId
-                ])
-            )
-            : response()->json(
-                config('messages.401'),
-                401
-            );
+        if (Auth('api')->id() != $userId) {
+            return response()->json(config('messages.401'), 401);
+        }
+        $deleteResult = $this->model->deleteWithOptions([
+            "eventId" => $eventId,
+            "userId" => $userId
+        ]);
+        if ($deleteResult) {
+            // event(new EventSubscriptionEvent(new EventSubscription(['eventId' => $eventId, 'userId' => $userId])));
+            return response()->json($deleteResult);
+        }
     }
 }

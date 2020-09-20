@@ -2,6 +2,11 @@
 
 Based on Laravel PHP Framework.
 
+## Todo
+
+-   Implement EventHandler Listeners to establish Notifications and Events relationship (via EventServiceProvider)
+-   Move models to Models folder
+
 ## Operation
 
 API Router > Controller > Repository > Model > MySQL DB
@@ -15,6 +20,8 @@ Repository design pattern [from Connor Leech](https://medium.com/employbl/use-th
 ### Install
 
 -   Install dependencies : `composer install`
+
+See also **Laravel > Laravel customization** below.
 
 ### Initialize
 
@@ -121,22 +128,22 @@ Top 10 Laravel Best Practices You Should Follow [from Sree](https://www.innofied
 
 4.  [Reset Password](https://medium.com/modulr/api-rest-with-laravel-5-6-passport-authentication-reset-password-part-4-50d27455dcca)
 
-## Issues
+### Laravel customization
 
-### # `php artisan migrate` returns error `Illuminate\Database\QueryException could not find driver`
+After a Laravel installation or update you should add the following :
 
--   fix : `sudo apt install php7.2-pdo php7.2-mysql`
-
-### # implement [Composite keys](https://stackoverflow.com/questions/36332005/laravel-model-with-two-primary-keys-update) to use two primary keys
+#### # implement [Composite keys](https://stackoverflow.com/questions/36332005/laravel-model-with-two-primary-keys-update) to use two primary keys
 
 -   in _\App\your_model.php_ :
 
 ```
 protected $primaryKey = ['user_id', 'stock_id'];
 public $incrementing = false;
+```
 
-in \vendor\laravel\framework\src\Illuminate\Database\Eloquent\Model.php
+-   in \vendor\laravel\framework\src\Illuminate\Database\Eloquent\Model.php
 
+```
 /**
  * Set the keys for a save update query.
  *
@@ -162,7 +169,7 @@ protected function setKeysForSaveQuery(Builder $query)
 /**
  * Get the primary key value for a save query.
  *
- * @param mixed $keyName
+ * @param  string $keyName
  * @return mixed
  */
 protected function getKeyForSaveQuery($keyName = null)
@@ -178,3 +185,16 @@ protected function getKeyForSaveQuery($keyName = null)
     return $this->getAttribute($keyName);
 }
 ```
+
+## Issues
+
+### # `php artisan migrate` returns error `Illuminate\Database\QueryException could not find driver`
+
+-   fix : `sudo apt install php7.2-pdo php7.2-mysql`
+
+### # `500 : Failed to connect to Pusher.`
+
+-   fix : [PusherBroadcaster exception "Failed to connect to Pusher" when running in queue](https://github.com/laravel/framework/issues/16478#issuecomment-261796182)
+
+1. Download curl certificate at [curl.haxx.se/ca/cacert.pem](https://curl.haxx.se/ca/cacert.pem)
+2. Update `curl.cainfo` in your _php.ini_ (apache server and php.x.x.x/bin) configuration, e.g. `curl.cainfo = "/home/dev/certificates/cacert.pem"`
