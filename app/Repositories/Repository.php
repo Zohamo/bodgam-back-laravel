@@ -16,7 +16,7 @@ class Repository implements RepositoryInterface
     /**
      * Constructor to bind model to repo
      *
-     * @param  mixed $model
+     * @param  Model $model
      * @return void
      */
     public function __construct(Model $model)

@@ -16,8 +16,8 @@ class EventSubscription extends Model
      * @var array
      */
     protected $fillable = [
-        'isAccepted',
-        'hasConfirmed',
+        'isAccepted', // host has accepted, `null` means host hasn't accepted NOR rejected (pending)
+        'hasConfirmed', // player has confirmed his presence
         'eventId',
         'userId',
     ];

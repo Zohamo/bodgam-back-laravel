@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Event;
+use App\Events\EventEvent;
 use Carbon\Carbon;
 
 /**
@@ -10,7 +11,6 @@ use Carbon\Carbon;
  */
 class EventRepository extends Repository
 {
-
     /**
      * Load the Event model with associations..
      *
@@ -27,7 +27,6 @@ class EventRepository extends Repository
             }
         ]);
     }
-
     /**
      * Get all instances of model with options.
      *
@@ -114,7 +113,7 @@ class EventRepository extends Repository
      */
     public function showWithOptions(array $options)
     {
-        $record  = $this->model
+        $record = $this->model
             ::with([
                 'location',
                 'host',
@@ -126,7 +125,7 @@ class EventRepository extends Repository
             ])
             ->find($options['eventId']);
 
-        if ($record->userId !== $options['userId']) {
+        if ($record && $record->userId !== $options['userId']) {
             unset($record->subscriptions);
         }
         return $record;
@@ -155,8 +154,30 @@ class EventRepository extends Repository
         $record = $this->model->find($id);
         if ($record) {
             $record->update($data);
-            return $this->fullEvent($record);
+            $fullEvent = $this->fullEvent($record);
+            $this->notify($id, $fullEvent);
+            return $fullEvent;
         }
         return null;
+    }
+
+    /**
+     * Send a notification to the Event.
+     *
+     * @param int $eventId
+     * @param App\Event $event
+     * @return void
+     */
+    private function notify(int $eventId, $event = null)
+    {
+        if (!$event) {
+            $options = ['eventId' => $eventId];
+            if (Auth('api')->id()) {
+                $options['userId'] = Auth('api')->id();
+            }
+            $event = $this->showWithOptions($options);
+        }
+        // Notification to Event via Pusher
+        event(new EventEvent($eventId, $event));
     }
 }

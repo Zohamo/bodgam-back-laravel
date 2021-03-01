@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Event;
-use App\Events\EventSubscriptionEvent;
-use App\Events\UserNotificationEvent;
 use App\EventSubscription;
 use App\Http\Requests\EventSubscriptionRequest;
 use App\Repositories\EventRepository;
@@ -106,7 +104,6 @@ class EventSubscriptionController extends Controller
             "userId" => $userId
         ]);
         if ($deleteResult) {
-            // event(new EventSubscriptionEvent(new EventSubscription(['eventId' => $eventId, 'userId' => $userId])));
             return response()->json($deleteResult);
         }
     }

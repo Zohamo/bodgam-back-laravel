@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:api', 'verified', 'data.transform']], funct
 });
 
 Route::group(['middleware' => ['auth:api', 'verified']], function () {
+    Route::get('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@show');
     Route::put('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@update');
     Route::delete('events/{eventId}/users/{userId}/subscription', 'EventSubscriptionController@destroy');
     Route::get('profiles/{id}/events', 'EventController@userAll')->middleware('data.transform');
