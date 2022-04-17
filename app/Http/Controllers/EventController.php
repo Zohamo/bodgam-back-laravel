@@ -41,16 +41,15 @@ class EventController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of all the Events past and future.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function allArchive()
+    public function archive()
     {
         $this->queryAllOptions['past'] = true;
         return response()->json($this->model->allWithOptions($this->queryAllOptions));
     }
-
 
     /**
      * Display a listing of the resource where the User is the Host.

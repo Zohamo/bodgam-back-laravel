@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:api'], function () {
  */
 
 Route::get('events', 'EventController@index')->middleware('data.transform');
+Route::get('events/all', 'EventController@archive')->middleware('data.transform');
 
 Route::group(['middleware' => ['auth:api', 'verified', 'data.transform']], function () {
     Route::get('events/{id}', 'EventController@show');
